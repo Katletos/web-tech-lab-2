@@ -1,12 +1,18 @@
 package by.bsuir.domain.entities;
 
-import java.time.ZonedDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
+@Getter
+@Setter
 public class Prescription {
     private Long id;
     private Long doctorId;
     private Long userId;
     private Long drugId;
-    private ZonedDateTime expirationDate;
-    private ZonedDateTime receiptDate;
+    private Instant expirationDate;
+    private Instant receiptDate;
 }

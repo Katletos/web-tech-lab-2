@@ -1,9 +1,9 @@
 package by.bsuir.domain.entities;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 public class Order {
     private Long id;
     private Long userId;
-    private ZonedDateTime date;
+    private Timestamp date;
 }
