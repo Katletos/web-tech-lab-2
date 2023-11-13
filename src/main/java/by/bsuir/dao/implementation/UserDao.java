@@ -24,7 +24,7 @@ public class UserDao implements UserDAO {
             statement.setLong(1, userId);
             resultSet = statement.executeQuery();
 
-            if (resultSet.first()){
+            if (resultSet.next()){
                 user = new User();
                 user.setId(resultSet.getLong(1));
                 user.setFirstName(resultSet.getString(2));
