@@ -7,6 +7,7 @@ import by.bsuir.dao.DaoException;
 import by.bsuir.dao.implementation.DrugDAO;
 import by.bsuir.dao.implementation.PrescriptionDAO;
 import by.bsuir.dao.implementation.UserDao;
+import by.bsuir.domain.entities.Prescription;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -51,21 +52,26 @@ public class PrescriptionService implements by.bsuir.application.interfaces.Pres
     }
 
     @Override
-    public void renewPrescription(Long prescriptionId) throws BuisenessRuleException {
-        var prescription = this.prescriptionDAO.getPrescriptionById(prescriptionId);
-
-        if (prescription == null) {
-            throw new BuisenessRuleException(Messages.prescriptionDoNotExist);
-        }
-
-        var utcTime = Instant.now();
-        prescription.setReceiptDate(utcTime);
-        prescription.setExpirationDate(utcTime.plus(30, ChronoUnit.DAYS));
-
+    public Prescription renewPrescription(Long prescriptionId, Long doctorId) throws BuisenessRuleException {
         try {
-            var sucsess = this.prescriptionDAO.renewPrescription(prescription);
+            var prescription = this.prescriptionDAO.getPrescriptionById(prescriptionId);
+
+            if (prescription == null) {
+                throw new BuisenessRuleException(Messages.prescriptionDoNotExist);
+            }
+
+            if (!prescription.getDoctorId().equals(doctorId)){
+                throw new BuisenessRuleException("Only the doctor who issued the prescription can renew it");
+            }
+
+            var utcTime = Instant.now();
+            prescription.setReceiptDate(utcTime);
+            prescription.setExpirationDate(utcTime.plus(30, ChronoUnit.DAYS));
+
+            this.prescriptionDAO.renewPrescription(prescription);
+            return this.prescriptionDAO.getPrescriptionById(prescriptionId);
         } catch (DaoException e) {
-            throw new RuntimeException(e);
+            throw new BuisenessRuleException("",e);
         }
     }
 }
