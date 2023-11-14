@@ -6,9 +6,8 @@ import by.bsuir.dao.connectionpool.ConnectionPool;
 import by.bsuir.dao.connectionpool.ConnectionPoolException;
 import by.bsuir.domain.entities.Prescription;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PrescriptionDAO implements by.bsuir.dao.interfaces.PrescriptionDAO {
@@ -39,8 +38,35 @@ public class PrescriptionDAO implements by.bsuir.dao.interfaces.PrescriptionDAO 
     }
 
     @Override
-    public List<Prescription> getPrescriptionsByUserId(Long userId, Boolean isDoctor) {
-        return null;
+    public List<Prescription> getPrescriptionsByUserId(Long userId, Boolean isDoctor) throws DaoException {
+        PreparedStatement statement = null;
+        Connection connection = null;
+        ResultSet resultSet = null;
+        List<Prescription> prescriptions = new ArrayList<>();
+        try {
+            connection = ConnectionPool.getConnection();
+            statement = connection.prepareStatement(
+                    "UPDATE prescriptions " +
+                            "SET receipt_date = ?, expiration_date = ? " +
+                            "WHERE id = ?");
+
+            resultSet = statement.executeQuery();
+            var tmpPrescription = new Prescription();
+
+            while (resultSet.next()){
+                tmpPrescription.setId(resultSet.getLong(1));
+                tmpPrescription.setUserId(resultSet.getLong(2));
+                tmpPrescription.setDoctorId(resultSet.getLong(3));
+                tmpPrescription.setDrugId(resultSet.getLong(4));
+                tmpPrescription.setReceiptDate(resultSet.getTimestamp(5).toInstant());
+                tmpPrescription.setExpirationDate(resultSet.getTimestamp(6).toInstant());
+                prescriptions.add(tmpPrescription);
+            }
+
+            return prescriptions;
+        } catch (ConnectionPoolException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -48,15 +74,23 @@ public class PrescriptionDAO implements by.bsuir.dao.interfaces.PrescriptionDAO 
         PreparedStatement statement = null;
         try {
             var connection = ConnectionPool.getConnection();
-            statement = connection.prepareStatement("UPDATE prescriptions SET receipt_date = ?, expiration_date = ?");
+            statement = connection.prepareStatement(
+                    "UPDATE prescriptions " +
+                    "SET receipt_date = ?, expiration_date = ? " +
+                    "WHERE id = ?");
 
             statement.setTimestamp(1, Timestamp.from(prescription.getReceiptDate()));
             statement.setTimestamp(2, Timestamp.from(prescription.getExpirationDate()));
+            statement.setLong(3, prescription.getId());
 
-//            return statement.execute();
+            var rows = statement.executeUpdate();
+            if (rows != 1){
+                throw new DaoException("Can't renew prescription");
+            }
+
+            return getPrescriptionById(prescription.getId());
         } catch (ConnectionPoolException | SQLException e) {
-            throw new DaoException("Can't add prescription", e);
+            throw new DaoException("Can't renew prescription", e);
         }
-        return null;
     }
 }

@@ -18,26 +18,27 @@ public class PrescriptionService implements by.bsuir.application.interfaces.Pres
 
     public Boolean addPrescription(UpdatePrescriptionDto dto) throws BuisenessRuleException {
         try {
-            var user = this.userDao.getUserById(dto.userId);
+            if (dto.userId.equals(dto.doctorId))
+            {
+                throw new BuisenessRuleException("");
+                }
 
+            var user = this.userDao.getUserById(dto.userId);
             if (user == null){
                 throw new BuisenessRuleException(Messages.userDoesNotExist);
             }
 
             var doctor = this.userDao.getUserById(dto.doctorId);
-
             if (doctor == null){
                 throw new BuisenessRuleException(Messages.doctorDoesNotExist);
             }
 
             var drug = this.drugDAO.getDrugById(dto.drugId);
-
             if (drug == null){
                 throw new BuisenessRuleException(Messages.drugNotExist);
             }
 
             var success = this.prescriptionDAO.addPrescription(dto);
-
             if (!success)
             {
                 throw new BuisenessRuleException(Messages.cantAddPrescription);

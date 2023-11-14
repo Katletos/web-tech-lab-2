@@ -12,7 +12,7 @@ public interface PrescriptionDAO {
 
     Prescription getPrescriptionById(Long prescriptionId);
 
-    List<Prescription> getPrescriptionsByUserId(Long userId, Boolean isDoctor);
+    List<Prescription> getPrescriptionsByUserId(Long userId, Boolean isDoctor) throws DaoException;
 
     Prescription renewPrescription(Prescription prescription) throws DaoException;
 }
