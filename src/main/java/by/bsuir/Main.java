@@ -18,13 +18,13 @@ public class Main {
         try {
             var connection = ConnectionPool.getConnection();
             System.out.println(connection.isClosed());
-            UpdatePrescriptionDto dto = new UpdatePrescriptionDto();
-            dto.drugId = 1L;
-            dto.userId = 2L;
-            dto.doctorId = 1L;
-            dto.expirationDate = Timestamp.from(Instant.now());
-            dto.receiptDate = Timestamp.from(Instant.now());
-            var ps = new PrescriptionService().addPrescription(dto);
+//            UpdatePrescriptionDto dto = new UpdatePrescriptionDto();
+//            dto.drugId = 1L;
+//            dto.userId = 2L;
+//            dto.doctorId = 1L;
+//            dto.expirationDate = Timestamp.from(Instant.now());
+//            dto.receiptDate = Timestamp.from(Instant.now());
+//            var ps = new PrescriptionService().addPrescription(dto);
 
             connection.close();
         } catch (ConnectionPoolException e) {
