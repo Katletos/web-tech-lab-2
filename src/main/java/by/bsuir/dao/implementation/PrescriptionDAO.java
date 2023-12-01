@@ -65,7 +65,7 @@ public class PrescriptionDAO implements by.bsuir.dao.interfaces.PrescriptionDAO 
     }
 
     @Override
-    public List<Prescription> getPrescriptionsByUserId(Long userId, Boolean isDoctor) {
+    public List<Prescription> getPrescriptionsByUserId(Long userId, Boolean isDoctor) throws DaoException {
         try {
             PreparedStatement statement = null;
             var connection = ConnectionPool.getConnection();
@@ -93,7 +93,7 @@ public class PrescriptionDAO implements by.bsuir.dao.interfaces.PrescriptionDAO 
 
             return prescriptions;
         } catch (ConnectionPoolException | SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Can't renew prescription", e);
         }
     }
 

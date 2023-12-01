@@ -11,6 +11,7 @@ import by.bsuir.domain.entities.Prescription;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class PrescriptionService implements by.bsuir.application.interfaces.PrescriptionService {
     private final UserDao userDao = new UserDao();
@@ -72,6 +73,16 @@ public class PrescriptionService implements by.bsuir.application.interfaces.Pres
             return this.prescriptionDAO.getPrescriptionById(prescriptionId);
         } catch (DaoException e) {
             throw new BuisenessRuleException("",e);
+        }
+    }
+
+    @Override
+    public List<Prescription> getUserPrescriptions(Long userId) throws BuisenessRuleException {
+        try {
+            return this.prescriptionDAO.getPrescriptionsByUserId(userId, false);
+        }
+        catch (DaoException e){
+            throw new BuisenessRuleException("", e);
         }
     }
 }
