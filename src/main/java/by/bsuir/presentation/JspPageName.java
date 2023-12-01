@@ -1,4 +1,4 @@
-package by.bsuir.webapp;
+package by.bsuir.presentation;
 
 public final class JspPageName {
     public static final String LOGIN_PAGE = "jsp/login.jsp";

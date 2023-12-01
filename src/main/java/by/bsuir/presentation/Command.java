@@ -1,4 +1,4 @@
-package by.bsuir.webapp;
+package by.bsuir.presentation;
 
 
 import jakarta.servlet.http.HttpServletRequest;

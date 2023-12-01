@@ -1,4 +1,4 @@
-package by.bsuir.webapp;
+package by.bsuir.presentation;
 
 public class CommandException extends Exception {
     public CommandException(String msg){

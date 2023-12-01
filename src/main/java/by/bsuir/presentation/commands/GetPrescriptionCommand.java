@@ -1,4 +1,4 @@
-package by.bsuir.webapp.commands;
+package by.bsuir.presentation.commands;
 
 import by.bsuir.application.impementation.PrescriptionService;
 import by.bsuir.webapp.Command;
